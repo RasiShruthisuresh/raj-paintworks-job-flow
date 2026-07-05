@@ -1,0 +1,49 @@
+import { ArrowRight } from "lucide-react";
+
+const STAGES = [
+  { key: "lead", label: "Lead" },
+  { key: "quote_sent", label: "Quote sent" },
+  { key: "customer_closed", label: "Customer closed" },
+  { key: "work_finished", label: "Work finished" },
+  { key: "invoice_sent", label: "Invoice sent" }
+];
+
+export default function PipelineBoard({ leads, onMoveLead }) {
+  function nextStage(currentStage) {
+    const currentIndex = STAGES.findIndex((stage) => stage.key === currentStage);
+    return STAGES[currentIndex + 1] || STAGES[0];
+  }
+
+  return (
+    <section className="pipeline-board" aria-label="Painting work stages">
+      {STAGES.map((stage) => {
+        const stageLeads = leads.filter((lead) => lead.stage === stage.key);
+        return (
+          <div className="stage-column" key={stage.key}>
+            <div className="stage-header">
+              <h2>{stage.label}</h2>
+              <span>{stageLeads.length}</span>
+            </div>
+            <div className="cards">
+              {stageLeads.map((lead) => {
+                const next = nextStage(lead.stage);
+                return (
+                  <article className="lead-card" key={lead.id}>
+                    <h3>{lead.customerName || "Untitled customer"}</h3>
+                    <p>{lead.siteAddress}</p>
+                    <strong>Rs. {lead.estimatedValue}</strong>
+                    <small>{lead.notes}</small>
+                    <button onClick={() => onMoveLead(lead.id, next.key)}>
+                      Move to {next.label}
+                      <ArrowRight size={14} />
+                    </button>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </section>
+  );
+}

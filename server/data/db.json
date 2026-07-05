@@ -1,0 +1,59 @@
+{
+  "leads": [
+    {
+      "id": "1001",
+      "customerName": "Apex Dental Clinic",
+      "phone": "98765 44010",
+      "siteAddress": "Indiranagar, Bengaluru",
+      "stage": "lead",
+      "estimatedValue": 120000,
+      "notes": "Interior repainting. Wants weekend visit.",
+      "createdAt": "2026-06-18T10:00:00.000Z",
+      "updatedAt": "2026-06-18T10:00:00.000Z"
+    },
+    {
+      "id": "1002",
+      "customerName": "Greenfield Workspace",
+      "phone": "98450 12880",
+      "siteAddress": "Whitefield, Bengaluru",
+      "stage": "quote_sent",
+      "estimatedValue": "280000",
+      "notes": "Quote sent but not followed up.",
+      "createdAt": "2026-06-20T12:30:00.000Z",
+      "updatedAt": "2026-06-21T08:00:00.000Z"
+    },
+    {
+      "id": "1003",
+      "customerName": "Lotus Mini Mart",
+      "phone": "99887 66221",
+      "siteAddress": "Koramangala, Bengaluru",
+      "stage": "customer closed",
+      "estimatedValue": 76000,
+      "notes": "Owner asked for quick start.",
+      "createdAt": "2026-06-22T09:15:00.000Z",
+      "updatedAt": "2026-06-23T11:10:00.000Z"
+    },
+    {
+      "id": "1004",
+      "customerName": "",
+      "phone": "91234 88990",
+      "siteAddress": "MG Road, Bengaluru",
+      "stage": "work_finished",
+      "estimatedValue": -10000,
+      "notes": "Bad imported record.",
+      "createdAt": "yesterday",
+      "updatedAt": "today"
+    },
+    {
+      "id": "1005",
+      "customerName": "Northstar Fitness",
+      "phone": "90080 45033",
+      "siteAddress": "HSR Layout, Bengaluru",
+      "stage": "invoice_sent",
+      "estimatedValue": 195000,
+      "notes": "Invoice sent. Payment pending.",
+      "createdAt": "2026-06-24T07:30:00.000Z",
+      "updatedAt": "2026-06-26T15:45:00.000Z"
+    }
+  ]
+}

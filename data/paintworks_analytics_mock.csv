@@ -1,0 +1,13 @@
+date,lead_id,customer_name,stage,estimated_value,actual_invoice_value,quote_sent_date,closed_date,work_finished_date,invoice_sent_date,source,city,job_type,crew_size,lead_owner
+2026-06-01,2001,Orion Coworking,invoice_sent,240000,238000,2026-06-03,2026-06-07,2026-06-14,2026-06-15,Referral,Bengaluru,Interior repaint,5,Raj
+2026-06-02,2002,Sunrise Cafe,work_finished,88000,0,2026-06-04,2026-06-09,2026-06-13,,Walk-in,Bengaluru,Exterior touch-up,3,Meena
+2026-06-03,2003,Metro Auto Care,customer_closed,165000,0,2026-06-06,2026-06-11,,,Google Maps,Bengaluru,Industrial floor coating,4,Raj
+2026-06-05,2004,Lakeside Preschool,quote_sent,310000,0,2026-06-08,,,,Referral,Bengaluru,Interior repaint,6,Raj
+2026-06-07,2005,Bluefin Logistics,lead,420000,0,,,,,Website,Bengaluru,Warehouse repaint,8,Meena
+2026-06-09,2006,Peak Dental Studio,invoice_sent,125000,128000,2026-06-10,2026-06-12,2026-06-18,2026-06-19,Referral,Bengaluru,Interior repaint,4,Raj
+2026-06-11,2007,Fresh Basket Market,quote_sent,97000,0,2026-06-12,,,,Walk-in,Bengaluru,Exterior touch-up,3,Meena
+2026-06-13,2008,Nimbus Fitness,customer_closed,215000,0,2026-06-15,2026-06-18,,,Website,Bengaluru,Interior repaint,5,Raj
+2026-06-15,2009,Harbor Accounting,work_finished,73000,0,2026-06-16,2026-06-18,2026-06-22,,Google Maps,Bengaluru,Office refresh,2,Meena
+2026-06-17,2010,Prism Pharmacy,lead,54000,0,,,,,Referral,Bengaluru,Shop touch-up,2,Raj
+2026-06-19,2011,Northline Storage,invoice_sent,510000,505000,2026-06-21,2026-06-25,2026-07-01,2026-07-02,Website,Bengaluru,Warehouse repaint,9,Raj
+2026-06-21,2012,Urban Threads,quote_sent,132000,0,2026-06-23,,,,Instagram,Bengaluru,Retail repaint,4,Meena
