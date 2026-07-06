@@ -15,6 +15,14 @@ const STAGES = ["lead", "quote_sent", "customer_closed", "work_finished", "invoi
 app.use(cors());
 app.use(express.json());
 
+app.use((err, req, res, next) => {
+  if (err.type === "entity.parse.failed") {
+    res.status(400).json({ message: "Request body is not valid JSON." });
+    return;
+  }
+  next(err);
+});
+
 function mapLead(row) {
   return {
     id: row.id,
