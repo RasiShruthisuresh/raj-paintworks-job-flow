@@ -17,7 +17,7 @@
       "phone": "98450 12880",
       "siteAddress": "Whitefield, Bengaluru",
       "stage": "quote_sent",
-      "estimatedValue": "280000",
+      "estimatedValue": 280000,
       "notes": "Quote sent but not followed up.",
       "createdAt": "2026-06-20T12:30:00.000Z",
       "updatedAt": "2026-06-21T08:00:00.000Z"
@@ -35,14 +35,14 @@
     },
     {
       "id": "1004",
-      "customerName": "",
+      "customerName": "Bluebell Interiors",
       "phone": "91234 88990",
       "siteAddress": "MG Road, Bengaluru",
       "stage": "work_finished",
-      "estimatedValue": -10000,
+      "estimatedValue": 65000,
       "notes": "Bad imported record.",
-      "createdAt": "yesterday",
-      "updatedAt": "today"
+      "createdAt": "2026-06-19T09:30:00.000Z",
+      "updatedAt": "2026-06-25T16:00:00.000Z"
     },
     {
       "id": "1005",
@@ -54,6 +54,33 @@
       "notes": "Invoice sent. Payment pending.",
       "createdAt": "2026-06-24T07:30:00.000Z",
       "updatedAt": "2026-06-26T15:45:00.000Z"
+    },
+    {
+      "id": "1783331044350",
+      "customerName": "",
+      "stage": "lead",
+      "estimatedValue": 0,
+      "notes": "",
+      "createdAt": "Mon Jul 06 2026 15:14:04 GMT+0530 (India Standard Time)",
+      "updatedAt": "Mon Jul 06 2026 15:14:04 GMT+0530 (India Standard Time)"
+    },
+    {
+      "id": "1783331397956",
+      "customerName": "apex dental clinic",
+      "stage": "lead",
+      "estimatedValue": 0,
+      "notes": "",
+      "createdAt": "Mon Jul 06 2026 15:19:57 GMT+0530 (India Standard Time)",
+      "updatedAt": "Mon Jul 06 2026 15:19:57 GMT+0530 (India Standard Time)"
+    },
+    {
+      "id": "1783331453614",
+      "customerName": "apex dental clinic ",
+      "stage": "lead",
+      "estimatedValue": "120000",
+      "notes": "decision maker",
+      "createdAt": "Mon Jul 06 2026 15:20:53 GMT+0530 (India Standard Time)",
+      "updatedAt": "Mon Jul 06 2026 15:20:53 GMT+0530 (India Standard Time)"
     }
   ]
 }

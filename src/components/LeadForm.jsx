@@ -9,8 +9,26 @@ const emptyLead = {
   notes: ""
 };
 
+function validate(form) {
+  const errors = {};
+
+  if (!form.customerName.trim()) {
+    errors.customerName = "Customer name is required.";
+  }
+
+  if (form.estimatedValue !== "") {
+    const value = Number(form.estimatedValue);
+    if (Number.isNaN(value) || value < 0) {
+      errors.estimatedValue = "Estimated value must be a non-negative number.";
+    }
+  }
+
+  return errors;
+}
+
 export default function LeadForm({ onCreateLead }) {
   const [form, setForm] = useState(emptyLead);
+  const [errors, setErrors] = useState({});
 
   function updateField(event) {
     setForm({
@@ -21,6 +39,11 @@ export default function LeadForm({ onCreateLead }) {
 
   function submitForm(event) {
     event.preventDefault();
+    const validationErrors = validate(form);
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
     onCreateLead(form);
     setForm(emptyLead);
   }
@@ -28,10 +51,17 @@ export default function LeadForm({ onCreateLead }) {
   return (
     <aside className="lead-form-panel">
       <h2>Add job lead</h2>
-      <form onSubmit={submitForm}>
+      <form onSubmit={submitForm} noValidate>
         <label>
           Customer / business name
-          <input name="customerName" value={form.customerName} onChange={updateField} placeholder="Apex Dental Clinic" />
+          <input
+            name="customerName"
+            value={form.customerName}
+            onChange={updateField}
+            placeholder="Apex Dental Clinic"
+            required
+          />
+          {errors.customerName ? <span className="field-error">{errors.customerName}</span> : null}
         </label>
         <label>
           Phone
@@ -43,7 +73,15 @@ export default function LeadForm({ onCreateLead }) {
         </label>
         <label>
           Estimated value
-          <input name="estimatedValue" value={form.estimatedValue} onChange={updateField} placeholder="120000" />
+          <input
+            name="estimatedValue"
+            type="number"
+            min="0"
+            value={form.estimatedValue}
+            onChange={updateField}
+            placeholder="120000"
+          />
+          {errors.estimatedValue ? <span className="field-error">{errors.estimatedValue}</span> : null}
         </label>
         <label>
           Notes

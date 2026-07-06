@@ -130,6 +130,12 @@ h1 {
   padding: 10px;
 }
 
+.field-error {
+  color: #c13515;
+  font-size: 12px;
+  font-weight: 500;
+}
+
 .lead-form-panel textarea {
   min-height: 88px;
   resize: vertical;

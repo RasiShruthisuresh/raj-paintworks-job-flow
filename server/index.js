@@ -34,14 +34,31 @@ app.get("/api/leads", (req, res) => {
 });
 
 app.post("/api/leads", (req, res) => {
+  const customerName = typeof req.body.customerName === "string" ? req.body.customerName.trim() : "";
+  if (!customerName) {
+    res.status(400).json({ message: "Customer name is required." });
+    return;
+  }
+
+  const rawEstimatedValue = req.body.estimatedValue;
+  const estimatedValue =
+    rawEstimatedValue === undefined || rawEstimatedValue === null || rawEstimatedValue === ""
+      ? 0
+      : Number(rawEstimatedValue);
+
+  if (Number.isNaN(estimatedValue) || estimatedValue < 0) {
+    res.status(400).json({ message: "Estimated value must be a non-negative number." });
+    return;
+  }
+
   const db = readDb();
   const lead = {
     id: Date.now().toString(),
-    customerName: req.body.customerName,
+    customerName,
     phone: req.body.phone,
     siteAddress: req.body.siteAddress,
     stage: req.body.stage || "lead",
-    estimatedValue: req.body.estimatedValue || 0,
+    estimatedValue,
     notes: req.body.notes,
     createdAt: Date(),
     updatedAt: Date()
@@ -74,7 +91,10 @@ app.put("/api/leads/:id/stage", (req, res) => {
 
 app.get("/api/analytics/summary", (req, res) => {
   const db = readDb();
-  const totalValue = db.leads.reduce((sum, lead) => sum + Number(lead.estimatedValue), 0);
+  const totalValue = db.leads.reduce((sum, lead) => {
+    const value = Number(lead.estimatedValue);
+    return value > 0 ? sum + value : sum;
+  }, 0);
   res.json({
     totalLeads: db.leads.length,
     totalValue,
