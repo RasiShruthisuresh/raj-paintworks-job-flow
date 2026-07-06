@@ -9,10 +9,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3001;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
 
 const STAGES = ["lead", "quote_sent", "customer_closed", "work_finished", "invoice_sent"];
 
-app.use(cors());
+app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
 app.use((err, req, res, next) => {
