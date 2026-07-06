@@ -5,11 +5,11 @@
       "customerName": "Apex Dental Clinic",
       "phone": "98765 44010",
       "siteAddress": "Indiranagar, Bengaluru",
-      "stage": "lead",
+      "stage": "invoice_sent",
       "estimatedValue": 120000,
       "notes": "Interior repainting. Wants weekend visit.",
       "createdAt": "2026-06-18T10:00:00.000Z",
-      "updatedAt": "2026-06-18T10:00:00.000Z"
+      "updatedAt": "Mon Jul 06 2026 22:49:21 GMT+0530 (India Standard Time)"
     },
     {
       "id": "1002",
@@ -38,11 +38,11 @@
       "customerName": "Bluebell Interiors",
       "phone": "91234 88990",
       "siteAddress": "MG Road, Bengaluru",
-      "stage": "work_finished",
+      "stage": "invoice_sent",
       "estimatedValue": 65000,
       "notes": "Bad imported record.",
       "createdAt": "2026-06-19T09:30:00.000Z",
-      "updatedAt": "2026-06-25T16:00:00.000Z"
+      "updatedAt": "Mon Jul 06 2026 22:07:23 GMT+0530 (India Standard Time)"
     },
     {
       "id": "1005",
@@ -54,33 +54,6 @@
       "notes": "Invoice sent. Payment pending.",
       "createdAt": "2026-06-24T07:30:00.000Z",
       "updatedAt": "2026-06-26T15:45:00.000Z"
-    },
-    {
-      "id": "1783331044350",
-      "customerName": "",
-      "stage": "lead",
-      "estimatedValue": 0,
-      "notes": "",
-      "createdAt": "Mon Jul 06 2026 15:14:04 GMT+0530 (India Standard Time)",
-      "updatedAt": "Mon Jul 06 2026 15:14:04 GMT+0530 (India Standard Time)"
-    },
-    {
-      "id": "1783331397956",
-      "customerName": "apex dental clinic",
-      "stage": "lead",
-      "estimatedValue": 0,
-      "notes": "",
-      "createdAt": "Mon Jul 06 2026 15:19:57 GMT+0530 (India Standard Time)",
-      "updatedAt": "Mon Jul 06 2026 15:19:57 GMT+0530 (India Standard Time)"
-    },
-    {
-      "id": "1783331453614",
-      "customerName": "apex dental clinic ",
-      "stage": "lead",
-      "estimatedValue": "120000",
-      "notes": "decision maker",
-      "createdAt": "Mon Jul 06 2026 15:20:53 GMT+0530 (India Standard Time)",
-      "updatedAt": "Mon Jul 06 2026 15:20:53 GMT+0530 (India Standard Time)"
     }
   ]
 }
