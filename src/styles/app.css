@@ -160,6 +160,16 @@ h1 {
   padding: 14px;
 }
 
+@media (max-width: 768px) {
+  .pipeline-board {
+    grid-template-columns: 1fr;
+  }
+
+  .stage-column {
+    min-height: auto;
+  }
+}
+
 .stage-header {
   align-items: center;
   display: flex;
@@ -191,6 +201,7 @@ h1 {
   box-shadow: 0 3px 8px rgb(0 0 0 / 0.04);
   display: grid;
   gap: 8px;
+  overflow-wrap: break-word;
   padding: 14px;
 }
 
