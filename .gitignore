@@ -4,3 +4,4 @@ dist
 .DS_Store
 server/data/*.local.json
 npm-debug.log*
+CLAUDE.md
