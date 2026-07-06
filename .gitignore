@@ -3,5 +3,9 @@ dist
 .env
 .DS_Store
 server/data/*.local.json
+server/data/app.db
+server/data/app.db-journal
+server/data/app.db-wal
+server/data/app.db-shm
 npm-debug.log*
 CLAUDE.md
