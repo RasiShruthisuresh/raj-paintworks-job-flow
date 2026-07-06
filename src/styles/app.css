@@ -194,6 +194,17 @@ h1 {
   min-height: 36px;
 }
 
+.stage-complete {
+  align-items: center;
+  color: #008489;
+  display: flex;
+  font-size: 13px;
+  font-weight: 700;
+  gap: 8px;
+  justify-content: center;
+  min-height: 36px;
+}
+
 .analytics-page {
   display: grid;
   gap: 20px;

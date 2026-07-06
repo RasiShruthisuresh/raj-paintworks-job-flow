@@ -27,7 +27,7 @@
       "customerName": "Lotus Mini Mart",
       "phone": "99887 66221",
       "siteAddress": "Koramangala, Bengaluru",
-      "stage": "customer closed",
+      "stage": "customer_closed",
       "estimatedValue": 76000,
       "notes": "Owner asked for quick start.",
       "createdAt": "2026-06-22T09:15:00.000Z",

@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 const DATA_PATH = path.join(__dirname, "data", "db.json");
 
-const STAGES = ["lead", "quote sent", "customer closed", "work finished", "invoice sent"];
+const STAGES = ["lead", "quote_sent", "customer_closed", "work_finished", "invoice_sent"];
 
 app.use(cors());
 app.use(express.json());
@@ -78,7 +78,7 @@ app.get("/api/analytics/summary", (req, res) => {
   res.json({
     totalLeads: db.leads.length,
     totalValue,
-    openLeads: db.leads.filter((lead) => lead.stage !== "invoice sent").length,
+    openLeads: db.leads.filter((lead) => lead.stage !== "invoice_sent").length,
     stageCounts: db.leads.reduce((counts, lead) => {
       counts[lead.stage] = (counts[lead.stage] || 0) + 1;
       return counts;

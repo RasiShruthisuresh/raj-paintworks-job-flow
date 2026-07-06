@@ -1,4 +1,4 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 
 const STAGES = [
   { key: "lead", label: "Lead" },
@@ -11,7 +11,10 @@ const STAGES = [
 export default function PipelineBoard({ leads, onMoveLead }) {
   function nextStage(currentStage) {
     const currentIndex = STAGES.findIndex((stage) => stage.key === currentStage);
-    return STAGES[currentIndex + 1] || STAGES[0];
+    if (currentIndex === -1 || currentIndex === STAGES.length - 1) {
+      return null;
+    }
+    return STAGES[currentIndex + 1];
   }
 
   return (
@@ -33,10 +36,17 @@ export default function PipelineBoard({ leads, onMoveLead }) {
                     <p>{lead.siteAddress}</p>
                     <strong>Rs. {lead.estimatedValue}</strong>
                     <small>{lead.notes}</small>
-                    <button onClick={() => onMoveLead(lead.id, next.key)}>
-                      Move to {next.label}
-                      <ArrowRight size={14} />
-                    </button>
+                    {next ? (
+                      <button onClick={() => onMoveLead(lead.id, next.key)}>
+                        Move to {next.label}
+                        <ArrowRight size={14} />
+                      </button>
+                    ) : (
+                      <span className="stage-complete">
+                        <Check size={14} />
+                        Complete
+                      </span>
+                    )}
                   </article>
                 );
               })}
