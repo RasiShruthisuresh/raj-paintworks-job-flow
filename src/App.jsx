@@ -8,26 +8,37 @@ import { createLead, getLeads, updateLeadStage } from "./api.js";
 export default function App() {
   const [leads, setLeads] = useState([]);
   const [view, setView] = useState("work");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     getLeads().then(setLeads);
   }, []);
 
   async function handleCreateLead(payload) {
-    const newLead = await createLead(payload);
-    setLeads([...leads, newLead]);
+    try {
+      const newLead = await createLead(payload);
+      setLeads([...leads, newLead]);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   async function handleMoveLead(id, nextStage) {
-    const updatedLead = await updateLeadStage(id, nextStage);
-    setLeads(
-      leads.map((lead) => {
-        if (lead.id === id) {
-          return updatedLead;
-        }
-        return lead;
-      })
-    );
+    try {
+      const updatedLead = await updateLeadStage(id, nextStage);
+      setLeads(
+        leads.map((lead) => {
+          if (lead.id === id) {
+            return updatedLead;
+          }
+          return lead;
+        })
+      );
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   return (
@@ -48,6 +59,12 @@ export default function App() {
           </button>
         </nav>
       </header>
+
+      {error ? (
+        <p className="error-banner" role="alert">
+          {error}
+        </p>
+      ) : null}
 
       {view === "work" ? (
         <main className="work-layout">

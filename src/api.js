@@ -1,8 +1,16 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? "http://localhost:3001" : "");
 
+async function parseResponse(response) {
+  const data = await response.json().catch(() => null);
+  if (!response.ok) {
+    throw new Error(data?.message || `Request failed with status ${response.status}`);
+  }
+  return data;
+}
+
 export async function getLeads() {
   const response = await fetch(`${API_BASE_URL}/api/leads`);
-  return response.json();
+  return parseResponse(response);
 }
 
 export async function createLead(payload) {
@@ -13,7 +21,7 @@ export async function createLead(payload) {
     },
     body: JSON.stringify(payload)
   });
-  return response.json();
+  return parseResponse(response);
 }
 
 export async function updateLeadStage(id, stage) {
@@ -24,10 +32,10 @@ export async function updateLeadStage(id, stage) {
     },
     body: JSON.stringify({ status: stage })
   });
-  return response.json();
+  return parseResponse(response);
 }
 
 export async function getAnalyticsSummary() {
   const response = await fetch(`${API_BASE_URL}/api/analytics/summary`);
-  return response.json();
+  return parseResponse(response);
 }

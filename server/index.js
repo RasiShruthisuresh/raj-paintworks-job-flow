@@ -38,8 +38,8 @@ app.post("/api/leads", (req, res) => {
   const lead = {
     id: Date.now().toString(),
     customerName: req.body.customerName,
-    phone: req.body.mobile,
-    siteAddress: req.body.address,
+    phone: req.body.phone,
+    siteAddress: req.body.siteAddress,
     stage: req.body.stage || "lead",
     estimatedValue: req.body.estimatedValue || 0,
     notes: req.body.notes,
