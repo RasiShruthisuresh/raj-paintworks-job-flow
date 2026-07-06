@@ -21,6 +21,7 @@ export default function App() {
       setError(null);
     } catch (err) {
       setError(err.message);
+      throw err;
     }
   }
 

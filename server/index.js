@@ -1,4 +1,5 @@
 import cors from "cors";
+import crypto from "crypto";
 import express from "express";
 import fs from "fs";
 import path from "path";
@@ -23,17 +24,28 @@ function writeDb(db) {
   fs.writeFileSync(DATA_PATH, JSON.stringify(db, null, 2));
 }
 
+function withErrorHandling(handler) {
+  return (req, res) => {
+    try {
+      handler(req, res);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "Unable to read or write lead data right now." });
+    }
+  };
+}
+
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, timestamp: new Date().toISOString() });
 });
 
-app.get("/api/leads", (req, res) => {
+app.get("/api/leads", withErrorHandling((req, res) => {
   const db = readDb();
-  const leads = db.leads.sort((a, b) => a.customerName.localeCompare(b.customerName));
+  const leads = [...db.leads].sort((a, b) => a.customerName.localeCompare(b.customerName));
   res.json(leads);
-});
+}));
 
-app.post("/api/leads", (req, res) => {
+app.post("/api/leads", withErrorHandling((req, res) => {
   const customerName = typeof req.body.customerName === "string" ? req.body.customerName.trim() : "";
   if (!customerName) {
     res.status(400).json({ message: "Customer name is required." });
@@ -53,23 +65,23 @@ app.post("/api/leads", (req, res) => {
 
   const db = readDb();
   const lead = {
-    id: Date.now().toString(),
+    id: crypto.randomUUID(),
     customerName,
     phone: req.body.phone,
     siteAddress: req.body.siteAddress,
     stage: req.body.stage || "lead",
     estimatedValue,
     notes: req.body.notes,
-    createdAt: Date(),
-    updatedAt: Date()
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
   };
 
   db.leads.push(lead);
   writeDb(db);
   res.status(201).json(lead);
-});
+}));
 
-app.put("/api/leads/:id/stage", (req, res) => {
+app.put("/api/leads/:id/stage", withErrorHandling((req, res) => {
   const db = readDb();
   const lead = db.leads.find((item) => item.id == req.params.id);
 
@@ -83,13 +95,26 @@ app.put("/api/leads/:id/stage", (req, res) => {
     return;
   }
 
+  const currentIndex = STAGES.indexOf(lead.stage);
+  const requestedIndex = STAGES.indexOf(req.body.status);
+
+  if (currentIndex === -1) {
+    res.status(400).json({ message: `Lead has an unrecognized stage (${lead.stage}); cannot validate the transition.` });
+    return;
+  }
+
+  if (requestedIndex !== currentIndex && requestedIndex !== currentIndex + 1) {
+    res.status(400).json({ message: "A lead can only move to its immediate next stage." });
+    return;
+  }
+
   lead.stage = req.body.status;
-  lead.updatedAt = Date();
+  lead.updatedAt = new Date().toISOString();
   writeDb(db);
   res.json(lead);
-});
+}));
 
-app.get("/api/analytics/summary", (req, res) => {
+app.get("/api/analytics/summary", withErrorHandling((req, res) => {
   const db = readDb();
   const totalValue = db.leads.reduce((sum, lead) => {
     const value = Number(lead.estimatedValue);
@@ -104,7 +129,7 @@ app.get("/api/analytics/summary", (req, res) => {
       return counts;
     }, {})
   });
-});
+}));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "..", "dist")));

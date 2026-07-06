@@ -29,6 +29,7 @@ function validate(form) {
 export default function LeadForm({ onCreateLead }) {
   const [form, setForm] = useState(emptyLead);
   const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
 
   function updateField(event) {
     setForm({
@@ -37,15 +38,22 @@ export default function LeadForm({ onCreateLead }) {
     });
   }
 
-  function submitForm(event) {
+  async function submitForm(event) {
     event.preventDefault();
     const validationErrors = validate(form);
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) {
       return;
     }
-    onCreateLead(form);
-    setForm(emptyLead);
+    setSubmitting(true);
+    try {
+      await onCreateLead(form);
+      setForm(emptyLead);
+    } catch {
+      // error is already surfaced via the app-level error banner; keep the form filled in so the user doesn't lose their input
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -87,9 +95,9 @@ export default function LeadForm({ onCreateLead }) {
           Notes
           <textarea name="notes" value={form.notes} onChange={updateField} placeholder="Scope, timing, decision maker..." />
         </label>
-        <button className="primary-button" type="submit">
+        <button className="primary-button" type="submit" disabled={submitting}>
           <Plus size={16} />
-          Add lead
+          {submitting ? "Adding..." : "Add lead"}
         </button>
       </form>
     </aside>
