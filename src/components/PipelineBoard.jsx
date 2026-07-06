@@ -28,6 +28,9 @@ export default function PipelineBoard({ leads, onMoveLead }) {
               <span>{stageLeads.length}</span>
             </div>
             <div className="cards">
+              {stageLeads.length === 0 ? (
+                <p className="empty-state">No leads in this stage yet</p>
+              ) : null}
               {stageLeads.map((lead) => {
                 const next = nextStage(lead.stage);
                 return (

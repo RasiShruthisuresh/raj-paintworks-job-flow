@@ -195,6 +195,12 @@ h1 {
   gap: 12px;
 }
 
+.empty-state {
+  color: #767676;
+  font-size: 13px;
+  text-align: center;
+}
+
 .lead-card {
   border: 1px solid #dddddd;
   border-radius: 8px;
