@@ -24,6 +24,12 @@ function writeDb(db) {
   fs.writeFileSync(DATA_PATH, JSON.stringify(db, null, 2));
 }
 
+function normalizePhone(raw) {
+  const digitsOnly = typeof raw === "string" ? raw.replace(/\D/g, "") : "";
+  const digits = digitsOnly.length === 12 && digitsOnly.startsWith("91") ? digitsOnly.slice(2) : digitsOnly;
+  return digits.length === 10 ? digits : null;
+}
+
 function withErrorHandling(handler) {
   return (req, res) => {
     try {
@@ -52,14 +58,16 @@ app.post("/api/leads", withErrorHandling((req, res) => {
     return;
   }
 
-  const rawEstimatedValue = req.body.estimatedValue;
-  const estimatedValue =
-    rawEstimatedValue === undefined || rawEstimatedValue === null || rawEstimatedValue === ""
-      ? 0
-      : Number(rawEstimatedValue);
+  const phone = normalizePhone(req.body.phone);
+  if (!phone) {
+    res.status(400).json({ message: "Phone number must be exactly 10 digits." });
+    return;
+  }
 
-  if (Number.isNaN(estimatedValue) || estimatedValue < 0) {
-    res.status(400).json({ message: "Estimated value must be a non-negative number." });
+  const estimatedValue = Number(req.body.estimatedValue);
+
+  if (Number.isNaN(estimatedValue) || estimatedValue <= 0) {
+    res.status(400).json({ message: "Estimated value must be a positive number." });
     return;
   }
 
@@ -67,7 +75,7 @@ app.post("/api/leads", withErrorHandling((req, res) => {
   const lead = {
     id: crypto.randomUUID(),
     customerName,
-    phone: req.body.phone,
+    phone: `${phone.slice(0, 5)} ${phone.slice(5)}`,
     siteAddress: req.body.siteAddress,
     stage: req.body.stage || "lead",
     estimatedValue,

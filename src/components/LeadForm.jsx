@@ -9,6 +9,12 @@ const emptyLead = {
   notes: ""
 };
 
+function normalizePhone(raw) {
+  const digitsOnly = raw.replace(/\D/g, "");
+  const digits = digitsOnly.length === 12 && digitsOnly.startsWith("91") ? digitsOnly.slice(2) : digitsOnly;
+  return digits.length === 10 ? digits : null;
+}
+
 function validate(form) {
   const errors = {};
 
@@ -16,11 +22,13 @@ function validate(form) {
     errors.customerName = "Customer name is required.";
   }
 
-  if (form.estimatedValue !== "") {
-    const value = Number(form.estimatedValue);
-    if (Number.isNaN(value) || value < 0) {
-      errors.estimatedValue = "Estimated value must be a non-negative number.";
-    }
+  if (!normalizePhone(form.phone)) {
+    errors.phone = "Phone number must be exactly 10 digits.";
+  }
+
+  const value = Number(form.estimatedValue);
+  if (form.estimatedValue === "" || Number.isNaN(value) || value <= 0) {
+    errors.estimatedValue = "Estimated value must be a positive number.";
   }
 
   return errors;
@@ -73,7 +81,8 @@ export default function LeadForm({ onCreateLead }) {
         </label>
         <label>
           Phone
-          <input name="phone" value={form.phone} onChange={updateField} placeholder="98765 43210" />
+          <input name="phone" value={form.phone} onChange={updateField} placeholder="98765 43210" required />
+          {errors.phone ? <span className="field-error">{errors.phone}</span> : null}
         </label>
         <label>
           Site address
@@ -84,10 +93,11 @@ export default function LeadForm({ onCreateLead }) {
           <input
             name="estimatedValue"
             type="number"
-            min="0"
+            min="1"
             value={form.estimatedValue}
             onChange={updateField}
             placeholder="120000"
+            required
           />
           {errors.estimatedValue ? <span className="field-error">{errors.estimatedValue}</span> : null}
         </label>
