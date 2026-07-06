@@ -16,11 +16,11 @@
       "customerName": "Greenfield Workspace",
       "phone": "98450 12880",
       "siteAddress": "Whitefield, Bengaluru",
-      "stage": "quote_sent",
+      "stage": "invoice_sent",
       "estimatedValue": 280000,
       "notes": "Quote sent but not followed up.",
       "createdAt": "2026-06-20T12:30:00.000Z",
-      "updatedAt": "2026-06-21T08:00:00.000Z"
+      "updatedAt": "Mon Jul 06 2026 23:31:46 GMT+0530 (India Standard Time)"
     },
     {
       "id": "1003",
@@ -54,6 +54,56 @@
       "notes": "Invoice sent. Payment pending.",
       "createdAt": "2026-06-24T07:30:00.000Z",
       "updatedAt": "2026-06-26T15:45:00.000Z"
+    },
+    {
+      "id": "1783360160146",
+      "customerName": "ape",
+      "phone": "9876543210",
+      "siteAddress": "bengaluru",
+      "stage": "work_finished",
+      "estimatedValue": 120000,
+      "notes": "",
+      "createdAt": "Mon Jul 06 2026 23:19:20 GMT+0530 (India Standard Time)",
+      "updatedAt": "Mon Jul 06 2026 23:31:46 GMT+0530 (India Standard Time)"
+    },
+    {
+      "id": "1783360567850",
+      "customerName": "hello",
+      "phone": "9842939293",
+      "siteAddress": "bengaluru",
+      "stage": "customer_closed",
+      "estimatedValue": 120000,
+      "notes": "",
+      "createdAt": "Mon Jul 06 2026 23:26:07 GMT+0530 (India Standard Time)",
+      "updatedAt": "Mon Jul 06 2026 23:26:11 GMT+0530 (India Standard Time)"
+    },
+    {
+      "id": "1783360970799",
+      "customerName": "Phone Test",
+      "phone": "123",
+      "stage": "lead",
+      "estimatedValue": 5000,
+      "createdAt": "Mon Jul 06 2026 23:32:50 GMT+0530 (India Standard Time)",
+      "updatedAt": "Mon Jul 06 2026 23:32:50 GMT+0530 (India Standard Time)"
+    },
+    {
+      "id": "1783361023189",
+      "customerName": "Field Check Co",
+      "phone": "9123456780",
+      "siteAddress": "Test Address Layout",
+      "stage": "lead",
+      "estimatedValue": 8000,
+      "createdAt": "Mon Jul 06 2026 23:33:43 GMT+0530 (India Standard Time)",
+      "updatedAt": "Mon Jul 06 2026 23:33:43 GMT+0530 (India Standard Time)"
+    },
+    {
+      "id": "1783361236208",
+      "customerName": "Audit Timestamp ID Check",
+      "phone": "9988776655",
+      "stage": "lead",
+      "estimatedValue": 1000,
+      "createdAt": "Mon Jul 06 2026 23:37:16 GMT+0530 (India Standard Time)",
+      "updatedAt": "Mon Jul 06 2026 23:37:16 GMT+0530 (India Standard Time)"
     }
   ]
 }
