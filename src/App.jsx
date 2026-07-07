@@ -1,8 +1,9 @@
-import { BarChart3, ClipboardList } from "lucide-react";
+import { BarChart3, ClipboardList, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
 import LeadForm from "./components/LeadForm.jsx";
 import PipelineBoard from "./components/PipelineBoard.jsx";
 import Analytics from "./pages/Analytics.jsx";
+import Timesheets from "./pages/Timesheets.jsx";
 import { createLead, getLeads, updateLeadStage } from "./api.js";
 
 export default function App() {
@@ -58,6 +59,10 @@ export default function App() {
             <BarChart3 size={16} />
             Analytics
           </button>
+          <button className={view === "timesheets" ? "active" : ""} onClick={() => setView("timesheets")}>
+            <Clock size={16} />
+            Time Tracking
+          </button>
         </nav>
       </header>
 
@@ -72,9 +77,9 @@ export default function App() {
           <LeadForm onCreateLead={handleCreateLead} />
           <PipelineBoard leads={leads} onMoveLead={handleMoveLead} />
         </main>
-      ) : (
-        <Analytics leads={leads} />
-      )}
+      ) : null}
+      {view === "analytics" ? <Analytics leads={leads} /> : null}
+      {view === "timesheets" ? <Timesheets leads={leads} /> : null}
     </div>
   );
 }

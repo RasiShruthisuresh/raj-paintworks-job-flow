@@ -122,6 +122,7 @@ h1 {
 }
 
 .lead-form-panel input,
+.lead-form-panel select,
 .lead-form-panel textarea {
   border: 1px solid #b0b0b0;
   border-radius: 8px;
@@ -293,4 +294,127 @@ h1 {
   background: #00a699;
   border-radius: 8px 8px 0 0;
   flex: 1;
+}
+
+.timesheets-page {
+  padding: 24px;
+}
+
+.timesheets-layout {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 320px 1fr;
+}
+
+.timesheets-forms {
+  display: grid;
+  gap: 24px;
+  align-content: start;
+}
+
+.timesheets-main {
+  display: grid;
+  gap: 20px;
+}
+
+.team-list-panel,
+.filter-panel,
+.job-summary-panel,
+.totals-panel,
+.entries-table-panel {
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.team-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.team-member-row {
+  align-items: center;
+  border: 1px solid #eeeeee;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+}
+
+.team-member-row button {
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  color: #008489;
+  cursor: pointer;
+  min-height: 32px;
+  padding: 4px 12px;
+}
+
+.team-member-meta {
+  color: #767676;
+  display: block;
+  font-size: 13px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.filter-row label {
+  color: #484848;
+  display: grid;
+  font-size: 13px;
+  font-weight: 700;
+  gap: 6px;
+}
+
+.filter-row select,
+.filter-row input {
+  border: 1px solid #b0b0b0;
+  border-radius: 8px;
+  color: #222222;
+  min-height: 38px;
+  padding: 6px 10px;
+}
+
+.totals-list {
+  display: grid;
+  gap: 6px;
+  list-style: none;
+  margin: 8px 0 20px;
+  padding: 0;
+}
+
+.totals-list li {
+  color: #484848;
+  display: flex;
+  font-size: 14px;
+  justify-content: space-between;
+}
+
+.entries-table {
+  border-collapse: collapse;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.entries-table th,
+.entries-table td {
+  border-bottom: 1px solid #eeeeee;
+  color: #484848;
+  font-size: 14px;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.entries-table th {
+  color: #767676;
+  font-size: 12px;
+  text-transform: uppercase;
 }
