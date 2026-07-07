@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAnalyticsDashboard } from "../api.js";
+import { formatINR } from "../format.js";
 
 const STAGES = [
   { key: "lead", label: "Lead" },
@@ -13,10 +14,6 @@ const STAGE_LABELS = STAGES.reduce((map, stage) => {
   map[stage.key] = stage.label;
   return map;
 }, {});
-
-function formatRupees(value) {
-  return `Rs. ${Math.round(value || 0).toLocaleString("en-IN")}`;
-}
 
 function BarList({ items, labelKey, valueKey, countKey }) {
   if (items.length === 0) {
@@ -38,7 +35,7 @@ function BarList({ items, labelKey, valueKey, countKey }) {
           <div className="bar-track">
             <div className="bar-fill" style={{ width: `${(item[valueKey] / maxValue) * 100}%` }} />
           </div>
-          <span className="bar-row-value">{formatRupees(item[valueKey])}</span>
+          <span className="bar-row-value">{formatINR(item[valueKey])}</span>
         </div>
       ))}
     </div>
@@ -159,11 +156,11 @@ export default function Analytics() {
         </div>
         <div className="metric-card">
           <span>Open opportunity value</span>
-          <strong>{formatRupees(metrics?.openValue)}</strong>
+          <strong>{formatINR(metrics?.openValue)}</strong>
         </div>
         <div className="metric-card">
           <span>Closed value</span>
-          <strong>{formatRupees(metrics?.closedValue)}</strong>
+          <strong>{formatINR(metrics?.closedValue)}</strong>
         </div>
         <div className="metric-card">
           <span>Invoices sent</span>
@@ -227,7 +224,7 @@ export default function Analytics() {
                 <tr key={row.leadId}>
                   <td>{row.customerName}</td>
                   <td>{STAGE_LABELS[row.stage] || row.stage}</td>
-                  <td>{formatRupees(row.value)}</td>
+                  <td>{formatINR(row.value)}</td>
                   <td>{row.source}</td>
                   <td>{row.jobType}</td>
                   <td>{row.leadOwner}</td>

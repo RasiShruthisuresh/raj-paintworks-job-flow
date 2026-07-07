@@ -80,7 +80,7 @@ export default function TeamMemberForm({ onCreateTeamMember }) {
           </select>
         </label>
         <label>
-          Rate (Rs.)
+          Rate (₹)
           <input name="rate" type="number" min="1" value={form.rate} onChange={updateField} placeholder="250" required />
           {errors.rate ? <span className="field-error">{errors.rate}</span> : null}
         </label>

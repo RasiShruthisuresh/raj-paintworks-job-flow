@@ -9,6 +9,7 @@ import {
   updateTeamMember,
   updateTimeEntry
 } from "../api.js";
+import { formatINR } from "../format.js";
 
 const WORK_TYPES = ["prep", "primer", "painting", "cleanup", "rework", "travel"];
 
@@ -165,7 +166,7 @@ export default function Timesheets({ leads }) {
                     <div>
                       <strong>{member.name}</strong>
                       <span className="team-member-meta">
-                        {member.role} · Rs. {member.rate}/{member.rateType === "hourly" ? "hr" : "day"}
+                        {member.role} · {formatINR(member.rate)}/{member.rateType === "hourly" ? "hr" : "day"}
                       </span>
                       <span className="team-member-meta">
                         {recentJobs.length > 0 ? `Recent: ${recentJobs.join(", ")}` : "No time logged yet"}
@@ -237,7 +238,7 @@ export default function Timesheets({ leads }) {
                 </div>
                 <div className="metric-card">
                   <span>Estimated labor cost</span>
-                  <strong>Rs. {jobTotalCost.toFixed(0)}</strong>
+                  <strong>{formatINR(jobTotalCost)}</strong>
                 </div>
               </div>
             </div>
@@ -297,7 +298,7 @@ export default function Timesheets({ leads }) {
                       <td>{entry.teamMemberName}</td>
                       <td>{entry.payableHours.toFixed(1)}</td>
                       <td>{entry.workType}</td>
-                      <td>Rs. {entryCost(entry).toFixed(0)}</td>
+                      <td>{formatINR(entryCost(entry))}</td>
                       <td>
                         <button type="button" onClick={() => setEditingEntry(entry)}>
                           Edit

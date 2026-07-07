@@ -1,4 +1,5 @@
 import { ArrowRight, Check } from "lucide-react";
+import { formatINR } from "../format.js";
 
 const STAGES = [
   { key: "lead", label: "Lead" },
@@ -37,7 +38,7 @@ export default function PipelineBoard({ leads, onMoveLead }) {
                   <article className="lead-card" key={lead.id}>
                     <h3>{lead.customerName || "Untitled customer"}</h3>
                     <p>{lead.siteAddress}</p>
-                    <strong>Rs. {lead.estimatedValue}</strong>
+                    <strong>{formatINR(lead.estimatedValue)}</strong>
                     <small>{lead.notes}</small>
                     {next ? (
                       <button onClick={() => onMoveLead(lead.id, next.key)}>
