@@ -35,9 +35,25 @@ function sumBy(entries, keyFn) {
   return totals;
 }
 
+function recentJobsFor(teamMemberId, entries) {
+  const seen = new Set();
+  const jobs = [];
+  [...entries]
+    .filter((entry) => entry.teamMemberId === teamMemberId)
+    .sort((a, b) => b.workDate.localeCompare(a.workDate))
+    .forEach((entry) => {
+      if (!seen.has(entry.jobCustomerName)) {
+        seen.add(entry.jobCustomerName);
+        jobs.push(entry.jobCustomerName);
+      }
+    });
+  return jobs.slice(0, 2);
+}
+
 export default function Timesheets({ leads }) {
   const [teamMembers, setTeamMembers] = useState([]);
   const [timeEntries, setTimeEntries] = useState([]);
+  const [allTimeEntries, setAllTimeEntries] = useState([]);
   const [error, setError] = useState(null);
   const [editingEntry, setEditingEntry] = useState(null);
   const [filters, setFilters] = useState({
@@ -50,6 +66,7 @@ export default function Timesheets({ leads }) {
 
   useEffect(() => {
     getTeamMembers().then(setTeamMembers);
+    getTimeEntries().then(setAllTimeEntries);
   }, []);
 
   useEffect(() => {
@@ -81,6 +98,7 @@ export default function Timesheets({ leads }) {
     try {
       const created = await createTimeEntry(payload);
       setTimeEntries([created, ...timeEntries]);
+      setAllTimeEntries([created, ...allTimeEntries]);
       setError(null);
     } catch (err) {
       setError(err.message);
@@ -92,6 +110,7 @@ export default function Timesheets({ leads }) {
     try {
       const updated = await updateTimeEntry(id, payload);
       setTimeEntries(timeEntries.map((entry) => (entry.id === updated.id ? updated : entry)));
+      setAllTimeEntries(allTimeEntries.map((entry) => (entry.id === updated.id ? updated : entry)));
       setEditingEntry(null);
       setError(null);
     } catch (err) {
@@ -139,19 +158,25 @@ export default function Timesheets({ leads }) {
             <h2>Team members</h2>
             {teamMembers.length === 0 ? <p className="empty-state">No team members yet</p> : null}
             <div className="team-list">
-              {teamMembers.map((member) => (
-                <div className="team-member-row" key={member.id}>
-                  <div>
-                    <strong>{member.name}</strong>
-                    <span className="team-member-meta">
-                      {member.role} · Rs. {member.rate}/{member.rateType === "hourly" ? "hr" : "day"}
-                    </span>
+              {teamMembers.map((member) => {
+                const recentJobs = recentJobsFor(member.id, allTimeEntries);
+                return (
+                  <div className="team-member-row" key={member.id}>
+                    <div>
+                      <strong>{member.name}</strong>
+                      <span className="team-member-meta">
+                        {member.role} · Rs. {member.rate}/{member.rateType === "hourly" ? "hr" : "day"}
+                      </span>
+                      <span className="team-member-meta">
+                        {recentJobs.length > 0 ? `Recent: ${recentJobs.join(", ")}` : "No time logged yet"}
+                      </span>
+                    </div>
+                    <button type="button" onClick={() => handleToggleActive(member)}>
+                      {member.isActive ? "Deactivate" : "Activate"}
+                    </button>
                   </div>
-                  <button type="button" onClick={() => handleToggleActive(member)}>
-                    {member.isActive ? "Deactivate" : "Activate"}
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
