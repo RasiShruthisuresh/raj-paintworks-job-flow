@@ -582,7 +582,7 @@ app.get("/api/analytics/dashboard", withErrorHandling((req, res) => {
   const table = db
     .prepare(
       `
-    SELECT customer_name AS customerName, stage, estimated_value AS value, source, job_type AS jobType, lead_owner AS leadOwner
+    SELECT lead_id AS leadId, customer_name AS customerName, stage, estimated_value AS value, source, job_type AS jobType, lead_owner AS leadOwner
     FROM analytics_opportunities
     ${whereClause}
     ORDER BY date DESC

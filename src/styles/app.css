@@ -271,20 +271,16 @@ h1 {
 .metric-grid {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.metric-card,
-.placeholder-chart {
-  background: #ffffff;
-  border: 1px solid #dddddd;
-  border-radius: 8px;
-  padding: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
 }
 
 .metric-card {
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
   display: grid;
   gap: 8px;
+  padding: 20px;
 }
 
 .metric-card span {
@@ -297,18 +293,66 @@ h1 {
   font-size: 32px;
 }
 
-.fake-bars {
-  align-items: end;
-  display: flex;
-  gap: 22px;
-  height: 260px;
-  margin-top: 24px;
+.analytics-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(2, 1fr);
 }
 
-.fake-bars div {
+.chart-panel {
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.bar-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.bar-row-label {
+  display: flex;
+  font-size: 13px;
+  font-weight: 700;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.bar-row-label span:first-child {
+  color: #222222;
+}
+
+.bar-row-count {
+  color: #767676;
+  font-weight: 500;
+}
+
+.bar-track {
+  background: #f0f0f0;
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.bar-fill {
   background: #00a699;
-  border-radius: 8px 8px 0 0;
-  flex: 1;
+  border-radius: 999px;
+  height: 100%;
+}
+
+.bar-row-value {
+  color: #484848;
+  display: block;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+  .analytics-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .timesheets-page {
@@ -330,6 +374,10 @@ h1 {
 .timesheets-main {
   display: grid;
   gap: 20px;
+}
+
+.entries-table-panel {
+  overflow-x: auto;
 }
 
 .team-list-panel,

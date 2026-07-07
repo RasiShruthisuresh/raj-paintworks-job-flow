@@ -35,11 +35,6 @@ export async function updateLeadStage(id, stage) {
   return parseResponse(response);
 }
 
-export async function getAnalyticsSummary() {
-  const response = await fetch(`${API_BASE_URL}/api/analytics/summary`);
-  return parseResponse(response);
-}
-
 export async function getTeamMembers() {
   const response = await fetch(`${API_BASE_URL}/api/team-members`);
   return parseResponse(response);
@@ -98,5 +93,17 @@ export async function updateTimeEntry(id, payload) {
     },
     body: JSON.stringify(payload)
   });
+  return parseResponse(response);
+}
+
+export async function getAnalyticsDashboard(filters = {}) {
+  const params = new URLSearchParams();
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value) {
+      params.set(key, value);
+    }
+  });
+  const query = params.toString();
+  const response = await fetch(`${API_BASE_URL}/api/analytics/dashboard${query ? `?${query}` : ""}`);
   return parseResponse(response);
 }

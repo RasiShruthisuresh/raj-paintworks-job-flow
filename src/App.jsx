@@ -78,7 +78,7 @@ export default function App() {
           <PipelineBoard leads={leads} onMoveLead={handleMoveLead} />
         </main>
       ) : null}
-      {view === "analytics" ? <Analytics leads={leads} /> : null}
+      {view === "analytics" ? <Analytics /> : null}
       {view === "timesheets" ? <Timesheets leads={leads} /> : null}
     </div>
   );
