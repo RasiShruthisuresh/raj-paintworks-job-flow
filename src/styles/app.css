@@ -146,6 +146,21 @@ h1 {
   min-height: 42px;
 }
 
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.form-actions button[type="button"] {
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  color: #484848;
+  cursor: pointer;
+  min-height: 42px;
+  padding: 0 16px;
+}
+
 .pipeline-board {
   display: grid;
   gap: 14px;
@@ -411,6 +426,16 @@ h1 {
   font-size: 14px;
   padding: 8px 10px;
   text-align: left;
+}
+
+.entries-table button {
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  color: #008489;
+  cursor: pointer;
+  min-height: 30px;
+  padding: 2px 12px;
 }
 
 .entries-table th {

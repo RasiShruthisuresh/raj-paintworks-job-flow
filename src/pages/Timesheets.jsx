@@ -6,7 +6,8 @@ import {
   createTimeEntry,
   getTeamMembers,
   getTimeEntries,
-  updateTeamMember
+  updateTeamMember,
+  updateTimeEntry
 } from "../api.js";
 
 const WORK_TYPES = ["prep", "primer", "painting", "cleanup", "rework", "travel"];
@@ -38,6 +39,7 @@ export default function Timesheets({ leads }) {
   const [teamMembers, setTeamMembers] = useState([]);
   const [timeEntries, setTimeEntries] = useState([]);
   const [error, setError] = useState(null);
+  const [editingEntry, setEditingEntry] = useState(null);
   const [filters, setFilters] = useState({
     jobId: "",
     teamMemberId: "",
@@ -86,6 +88,18 @@ export default function Timesheets({ leads }) {
     }
   }
 
+  async function handleUpdateTimeEntry(id, payload) {
+    try {
+      const updated = await updateTimeEntry(id, payload);
+      setTimeEntries(timeEntries.map((entry) => (entry.id === updated.id ? updated : entry)));
+      setEditingEntry(null);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    }
+  }
+
   function updateFilter(event) {
     setFilters({
       ...filters,
@@ -110,7 +124,14 @@ export default function Timesheets({ leads }) {
       <div className="timesheets-layout">
         <div className="timesheets-forms">
           <TeamMemberForm onCreateTeamMember={handleCreateTeamMember} />
-          <TimeEntryForm jobs={leads} teamMembers={teamMembers} onCreateTimeEntry={handleCreateTimeEntry} />
+          <TimeEntryForm
+            jobs={leads}
+            teamMembers={teamMembers}
+            editingEntry={editingEntry}
+            onCreateTimeEntry={handleCreateTimeEntry}
+            onUpdateTimeEntry={handleUpdateTimeEntry}
+            onCancelEdit={() => setEditingEntry(null)}
+          />
         </div>
 
         <section className="timesheets-main">
@@ -240,6 +261,7 @@ export default function Timesheets({ leads }) {
                     <th>Hours</th>
                     <th>Work type</th>
                     <th>Cost</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -251,6 +273,11 @@ export default function Timesheets({ leads }) {
                       <td>{entry.payableHours.toFixed(1)}</td>
                       <td>{entry.workType}</td>
                       <td>Rs. {entryCost(entry).toFixed(0)}</td>
+                      <td>
+                        <button type="button" onClick={() => setEditingEntry(entry)}>
+                          Edit
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

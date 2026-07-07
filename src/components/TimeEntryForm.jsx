@@ -1,5 +1,5 @@
 import { Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const WORK_TYPES = ["prep", "primer", "painting", "cleanup", "rework", "travel"];
 
@@ -13,6 +13,19 @@ const emptyEntry = {
   workType: "painting",
   notes: ""
 };
+
+function formFromEntry(entry) {
+  return {
+    jobId: entry.jobId,
+    teamMemberId: entry.teamMemberId,
+    workDate: entry.workDate,
+    startTime: entry.startTime,
+    endTime: entry.endTime,
+    breakMinutes: String(entry.breakMinutes),
+    workType: entry.workType,
+    notes: entry.notes || ""
+  };
+}
 
 function validate(form) {
   const errors = {};
@@ -49,12 +62,18 @@ function validate(form) {
   return errors;
 }
 
-export default function TimeEntryForm({ jobs, teamMembers, onCreateTimeEntry }) {
+export default function TimeEntryForm({ jobs, teamMembers, editingEntry, onCreateTimeEntry, onUpdateTimeEntry, onCancelEdit }) {
   const [form, setForm] = useState(emptyEntry);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
 
   const activeTeamMembers = teamMembers.filter((member) => member.isActive);
+  const isEditing = Boolean(editingEntry);
+
+  useEffect(() => {
+    setForm(editingEntry ? formFromEntry(editingEntry) : emptyEntry);
+    setErrors({});
+  }, [editingEntry]);
 
   function updateField(event) {
     setForm({
@@ -71,9 +90,14 @@ export default function TimeEntryForm({ jobs, teamMembers, onCreateTimeEntry }) 
       return;
     }
     setSubmitting(true);
+    const payload = { ...form, breakMinutes: Number(form.breakMinutes) || 0 };
     try {
-      await onCreateTimeEntry({ ...form, breakMinutes: Number(form.breakMinutes) || 0 });
-      setForm(emptyEntry);
+      if (isEditing) {
+        await onUpdateTimeEntry(editingEntry.id, payload);
+      } else {
+        await onCreateTimeEntry(payload);
+        setForm(emptyEntry);
+      }
     } catch {
       // error is already surfaced by the caller; keep the form filled in
     } finally {
@@ -83,7 +107,7 @@ export default function TimeEntryForm({ jobs, teamMembers, onCreateTimeEntry }) 
 
   return (
     <aside className="lead-form-panel">
-      <h2>Log time entry</h2>
+      <h2>{isEditing ? "Correct time entry" : "Log time entry"}</h2>
       <form onSubmit={submitForm} noValidate>
         <label>
           Job
@@ -142,10 +166,17 @@ export default function TimeEntryForm({ jobs, teamMembers, onCreateTimeEntry }) 
           Notes
           <textarea name="notes" value={form.notes} onChange={updateField} placeholder="Optional" />
         </label>
-        <button className="primary-button" type="submit" disabled={submitting}>
-          <Plus size={16} />
-          {submitting ? "Logging..." : "Log time entry"}
-        </button>
+        <div className="form-actions">
+          <button className="primary-button" type="submit" disabled={submitting}>
+            <Plus size={16} />
+            {submitting ? "Saving..." : isEditing ? "Save changes" : "Log time entry"}
+          </button>
+          {isEditing ? (
+            <button type="button" onClick={onCancelEdit}>
+              Cancel
+            </button>
+          ) : null}
+        </div>
       </form>
     </aside>
   );
