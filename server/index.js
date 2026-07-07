@@ -16,6 +16,50 @@ const ROLES = ["painter", "supervisor", "helper", "contractor"];
 const RATE_TYPES = ["hourly", "daily"];
 const WORK_TYPES = ["prep", "primer", "painting", "cleanup", "rework", "travel"];
 
+const CLOSED_STAGES = "'customer_closed', 'work_finished', 'invoice_sent'";
+const CLOSED_VALUE_EXPR = `
+  CASE
+    WHEN stage IN (${CLOSED_STAGES})
+    THEN CASE WHEN actual_invoice_value > 0 THEN actual_invoice_value ELSE estimated_value END
+    ELSE 0
+  END
+`;
+
+function buildAnalyticsFilters(query) {
+  const conditions = [];
+  const params = [];
+
+  if (query.startDate) {
+    conditions.push("date >= ?");
+    params.push(query.startDate);
+  }
+  if (query.endDate) {
+    conditions.push("date <= ?");
+    params.push(query.endDate);
+  }
+  if (query.stage) {
+    conditions.push("stage = ?");
+    params.push(query.stage);
+  }
+  if (query.source) {
+    conditions.push("source = ?");
+    params.push(query.source);
+  }
+  if (query.jobType) {
+    conditions.push("job_type = ?");
+    params.push(query.jobType);
+  }
+  if (query.leadOwner) {
+    conditions.push("lead_owner = ?");
+    params.push(query.leadOwner);
+  }
+
+  return {
+    whereClause: conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "",
+    params
+  };
+}
+
 app.use(cors({ origin: CORS_ORIGIN }));
 app.use(express.json());
 
@@ -469,6 +513,113 @@ app.put("/api/time-entries/:id", withErrorHandling((req, res) => {
 
   const updated = db.prepare(`${TIME_ENTRY_JOIN_SELECT} WHERE time_entries.id = ?`).get(req.params.id);
   res.json(mapTimeEntry(updated));
+}));
+
+app.get("/api/analytics/dashboard", withErrorHandling((req, res) => {
+  const { whereClause, params } = buildAnalyticsFilters(req.query);
+
+  const metricRow = db
+    .prepare(
+      `
+    SELECT
+      COUNT(*) AS totalLeads,
+      COALESCE(SUM(CASE WHEN stage IN ('lead', 'quote_sent') THEN estimated_value ELSE 0 END), 0) AS openValue,
+      COALESCE(SUM(${CLOSED_VALUE_EXPR}), 0) AS closedValue,
+      COALESCE(SUM(CASE WHEN stage = 'invoice_sent' THEN 1 ELSE 0 END), 0) AS invoicesSent,
+      AVG(CASE WHEN quote_sent_date IS NOT NULL AND closed_date IS NOT NULL THEN julianday(closed_date) - julianday(quote_sent_date) END) AS avgQuoteToCloseDays
+    FROM analytics_opportunities
+    ${whereClause}
+  `
+    )
+    .get(...params);
+
+  const stageBreakdown = db
+    .prepare(
+      `
+    SELECT stage, COUNT(*) AS count, COALESCE(SUM(estimated_value), 0) AS value
+    FROM analytics_opportunities
+    ${whereClause}
+    GROUP BY stage
+  `
+    )
+    .all(...params);
+
+  const sourcePerformance = db
+    .prepare(
+      `
+    SELECT source, COUNT(*) AS count, COALESCE(SUM(${CLOSED_VALUE_EXPR}), 0) AS closedValue
+    FROM analytics_opportunities
+    ${whereClause}
+    GROUP BY source
+  `
+    )
+    .all(...params);
+
+  const jobTypeMix = db
+    .prepare(
+      `
+    SELECT job_type AS jobType, COUNT(*) AS count, COALESCE(SUM(estimated_value), 0) AS value
+    FROM analytics_opportunities
+    ${whereClause}
+    GROUP BY job_type
+  `
+    )
+    .all(...params);
+
+  const activeCondition = whereClause
+    ? `${whereClause} AND stage IN ('lead', 'quote_sent', 'customer_closed')`
+    : "WHERE stage IN ('lead', 'quote_sent', 'customer_closed')";
+  const workloadRow = db
+    .prepare(
+      `
+    SELECT COUNT(*) AS activeJobCount, AVG(crew_size) AS averageCrewSize
+    FROM analytics_opportunities
+    ${activeCondition}
+  `
+    )
+    .get(...params);
+
+  const table = db
+    .prepare(
+      `
+    SELECT customer_name AS customerName, stage, estimated_value AS value, source, job_type AS jobType, lead_owner AS leadOwner
+    FROM analytics_opportunities
+    ${whereClause}
+    ORDER BY date DESC
+  `
+    )
+    .all(...params);
+
+  const filterOptions = {
+    sources: db.prepare("SELECT DISTINCT source FROM analytics_opportunities ORDER BY source").all().map((row) => row.source),
+    jobTypes: db
+      .prepare("SELECT DISTINCT job_type FROM analytics_opportunities ORDER BY job_type")
+      .all()
+      .map((row) => row.job_type),
+    leadOwners: db
+      .prepare("SELECT DISTINCT lead_owner FROM analytics_opportunities ORDER BY lead_owner")
+      .all()
+      .map((row) => row.lead_owner)
+  };
+
+  res.json({
+    metricSummary: {
+      totalLeads: metricRow.totalLeads,
+      openValue: metricRow.openValue,
+      closedValue: metricRow.closedValue,
+      invoicesSent: metricRow.invoicesSent,
+      avgQuoteToCloseDays: metricRow.avgQuoteToCloseDays
+    },
+    stageBreakdown,
+    sourcePerformance,
+    jobTypeMix,
+    workloadSignal: {
+      activeJobCount: workloadRow.activeJobCount,
+      averageCrewSize: workloadRow.averageCrewSize
+    },
+    table,
+    filterOptions
+  });
 }));
 
 if (process.env.NODE_ENV === "production") {

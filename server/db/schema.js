@@ -49,4 +49,28 @@ CREATE TABLE IF NOT EXISTS time_entries (
 CREATE INDEX IF NOT EXISTS idx_time_entries_job_id ON time_entries (job_id);
 CREATE INDEX IF NOT EXISTS idx_time_entries_team_member_id ON time_entries (team_member_id);
 CREATE INDEX IF NOT EXISTS idx_time_entries_work_date ON time_entries (work_date);
+
+-- Analytics dashboard mock dataset (docs/04-analytics-dashboard-spec.md).
+-- Seeded once from data/paintworks_analytics_mock.csv (12 rows), independent of the
+-- real leads table - this is demo data for the dashboard, not live pipeline data.
+CREATE TABLE IF NOT EXISTS analytics_opportunities (
+  lead_id TEXT PRIMARY KEY,
+  date TEXT NOT NULL,
+  customer_name TEXT NOT NULL,
+  stage TEXT NOT NULL CHECK (stage IN ('lead', 'quote_sent', 'customer_closed', 'work_finished', 'invoice_sent')),
+  estimated_value REAL NOT NULL,
+  actual_invoice_value REAL,
+  quote_sent_date TEXT,
+  closed_date TEXT,
+  work_finished_date TEXT,
+  invoice_sent_date TEXT,
+  source TEXT NOT NULL,
+  city TEXT,
+  job_type TEXT NOT NULL,
+  crew_size INTEGER NOT NULL,
+  lead_owner TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_analytics_opportunities_stage ON analytics_opportunities (stage);
+CREATE INDEX IF NOT EXISTS idx_analytics_opportunities_date ON analytics_opportunities (date);
 `;
