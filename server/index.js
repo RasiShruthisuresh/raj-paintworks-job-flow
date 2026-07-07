@@ -416,9 +416,14 @@ app.post("/api/time-entries", withErrorHandling((req, res) => {
     return;
   }
 
-  const teamMember = db.prepare("SELECT id FROM team_members WHERE id = ?").get(req.body.teamMemberId);
+  const teamMember = db.prepare("SELECT id, is_active FROM team_members WHERE id = ?").get(req.body.teamMemberId);
   if (!teamMember) {
     res.status(400).json({ message: "A valid team member is required." });
+    return;
+  }
+
+  if (!teamMember.is_active) {
+    res.status(400).json({ message: "Cannot log time for an inactive team member." });
     return;
   }
 
