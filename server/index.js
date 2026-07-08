@@ -272,27 +272,6 @@ app.put("/api/leads/:id/stage", withErrorHandling((req, res) => {
   res.json(mapLead(updated));
 }));
 
-// ===== TEMPORARY ADMIN CLEANUP ROUTE — REMOVE BEFORE FINAL SUBMISSION =====
-// One-time production cleanup for stray manual-test leads on Railway. Not a
-// real feature; delete this whole block once the cleanup is confirmed done.
-app.delete("/api/admin/leads/:id", withErrorHandling((req, res) => {
-  const adminToken = process.env.ADMIN_TOKEN;
-  if (!adminToken || req.headers["x-admin-token"] !== adminToken) {
-    res.status(403).json({ message: "Forbidden" });
-    return;
-  }
-
-  const lead = db.prepare("SELECT id FROM leads WHERE id = ?").get(req.params.id);
-  if (!lead) {
-    res.status(404).json({ message: "Lead not found" });
-    return;
-  }
-
-  db.prepare("DELETE FROM leads WHERE id = ?").run(req.params.id);
-  res.status(204).end();
-}));
-// ===== END TEMPORARY ADMIN CLEANUP ROUTE =====
-
 app.get("/api/analytics/summary", withErrorHandling((req, res) => {
   const totalLeads = db.prepare("SELECT COUNT(*) AS count FROM leads").get().count;
   const totalValue = db.prepare("SELECT COALESCE(SUM(estimated_value), 0) AS total FROM leads WHERE estimated_value > 0").get().total;
