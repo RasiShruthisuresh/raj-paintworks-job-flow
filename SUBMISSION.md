@@ -133,7 +133,7 @@ instead of `npm install` for a reproducible build from the committed lockfile.
 - [x] `CORS_ORIGIN` is set to the production URL above.
 - [x] Persistence: created a test lead via the live API, triggered a Railway redeploy, confirmed the lead survived it, deleted the test lead, and confirmed exactly 5 seed leads remain in production.
 - [x] Production data cleanup: 2 stray manual-test leads (`"Engineering works"`, `"Kavya"`) were found alongside the 5 real seed leads in the live database. Removed via a temporary, secret-gated `DELETE /api/admin/leads/:id` route — fails closed (403) unless a token header matches an env var that was never committed to the repo, and deletes by exact ID only after a defensive lookup confirming exactly one match, so it could never touch more than the one row it was pointed at. The route was committed, deployed, used exactly once per stray record (confirmed via a repeat delete returning 404), then reverted and redeployed — confirmed completely absent from `server/index.js` before that revert was pushed. (One earlier draft of this route was written and reviewed but never actually committed or deployed; caught during a routine status check and discarded as unused dead code rather than left sitting in the working tree — see "Agent usage and review" below.)
-- [ ] Private GitHub repository with the interviewer account invited — not something verifiable from within this environment (no repo-settings access); confirm manually before sending this in.
+- [x] Private GitHub repository with the interviewer account invited — confirmed by the candidate (not independently verifiable from within this environment; no repo-settings access).
 
 ## Agent usage and review
 
@@ -220,4 +220,4 @@ re-read from source:
 - [x] A lead created via the live production API survives a Railway redeploy.
 - [x] Exactly 5 seed leads remain in production (stray test records removed).
 - [ ] Full keyboard-navigation and screen-reader pass.
-- [ ] Confirm the GitHub repository is private and the interviewer account has been invited — not verifiable from this environment.
+- [x] GitHub repository is private and the interviewer account has been invited (confirmed by the candidate; not independently verifiable from this environment).
