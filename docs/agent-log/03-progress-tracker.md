@@ -132,3 +132,68 @@ always refer back to it by number.
 5. Railway deployment + `SUBMISSION.md` itself.
 
 Deadline: submit by Tuesday. Time is tight — stay scoped to what each doc specifies.
+
+---
+
+## Final status — 2026-07-08
+
+Everything in the "Not yet started" list above is now done, and finding **#17
+(analytics placeholder UI) is fixed** — that closes all 22 original findings
+(22/22, not 21/22 as the table above still shows; not editing that table itself,
+since it's an accurate record of what was true when it was written — recording
+the correction here instead). `SUBMISSION.md` is now the canonical, up-to-date
+summary of fixes/features/tradeoffs; this entry is a log of what happened
+between the last update above and final submission, not a replacement for it.
+
+- **SQLite persistence migration** — flat-file `db.json` replaced with
+  `better-sqlite3`; schema covers `leads`, `team_members`, `time_entries`, and
+  the analytics mock dataset. `DB_PATH` later made configurable via env var so
+  it can point at a Railway volume. (`3b962cb`, `9442541`, `5bae45d`, `b576ef9`,
+  `a26119d`, `d9b1f86`)
+- **Timesheet tracking** (`docs/03-timesheet-tracking-prd.md`) — team members as
+  a shared crew roster, time entries with payable-hours calculation and
+  validation, edit/correct action, filters, daily/weekly totals, job labor
+  cost. Both of the PRD's suggested test cases (8:30–17:30/60-min break → 8h;
+  end-before-start rejection) verified against the live API, not just read from
+  source. (`8250dc7`, `0d667a2`, `8d36678`, `d9b385a`)
+- **Analytics dashboard** (`docs/04-analytics-dashboard-spec.md`, closes #17) —
+  placeholder UI replaced entirely; all 6 required sections and all 5 filters,
+  computed server-side from the seeded CSV data, not a hardcoded frontend array.
+  (`c967370`, `950ec09`, `004acc3`)
+- **Design-token pass** (`docs/design.md`) — every hardcoded color/spacing/font
+  value in `app.css` replaced with a token from the design guide; surfaced and
+  fixed 3 mobile-responsiveness gaps not in the original findings (`.work-layout`,
+  `.timesheets-layout`, `.topbar` had no breakpoint at all). A later pass fixed a
+  4th, narrower mobile gap found in QA: analytics metric cards overflowing at
+  ~375px, plus small consistency fixes (card shadow, filter-input padding) to
+  match the Work page. (`6ac13c3`, `02a4ec8`, `cb312c3`, `2195dba`)
+- **Currency formatting + inactive-member validation** — added one shared
+  `formatINR()` helper used everywhere a rupee value is displayed (previously
+  inconsistent: one page had no grouping at all, another built its own
+  duplicate formatting function); `POST /api/time-entries` now rejects entries
+  against a deactivated team member. (`db0d83c`, `e836474`)
+- **Railway deployment** — first Docker build failed compiling
+  `better-sqlite3`: `node:20-alpine`'s musl libc had no matching prebuilt
+  binary, and node-gyp's fallback compile had no C++ toolchain to compile with.
+  Fixed by switching to `node:24-slim` (glibc, matches local Node, satisfies
+  `concurrently`'s `>=22`), adding the toolchain as a fallback regardless, and
+  `npm ci` for a reproducible build. (`b8c00c2`)
+- **Production data cleanup** — 2 stray manual-test leads (`"Engineering works"`,
+  `"Kavya"`) found in the live Railway database, alongside the 5 real seed
+  leads. Cleaned up via a temporary, secret-gated `DELETE /api/admin/leads/:id`
+  route (fails closed if the secret env var isn't set; deletes by exact ID only,
+  after a defensive lookup confirming exactly one match). First draft of this
+  route was written, reviewed, but never committed or deployed — caught during
+  a status check and discarded as unused dead code rather than left sitting in
+  the working tree. Re-added, committed, deployed, used once to delete both
+  stray records (confirmed via repeat-delete returning 404), then reverted and
+  redeployed — confirmed the route is completely gone from `server/index.js`
+  before pushing the revert. (`60b5a3d`, `be8efde`)
+- **Persistence verified live, 2026-07-08**: confirmed a Railway volume is
+  mounted at `/data` with `DB_PATH` pointing into it and `CORS_ORIGIN` set to
+  the production URL; created a test lead via the live API, triggered a
+  redeploy, confirmed the lead survived, deleted it, and confirmed exactly 5
+  seed leads remain in production.
+- **Both Claude Code sessions exported** as readable markdown transcripts in
+  `transcripts/` (including the overnight session that was cut short by a
+  system restart), for agent-usage review. (`7b9201f`)
